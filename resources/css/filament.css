@@ -1,0 +1,5 @@
+/* Changer le background de la barre de titre */
+.filament-header {
+    background-color: #1F2937; /* Gris foncé */
+    color: white; /* Texte en blanc */
+}
