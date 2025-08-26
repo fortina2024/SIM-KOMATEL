@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('operateurs', function (Blueprint $table) {
             $table->id();
-            $table->string('nom')->index(); // Nom complet
-            $table->string('telephone', 20)->nullable()->index(); // Tel avec index pour recherches rapides
-            $table->string('email')->nullable()->unique(); // Email unique
-            $table->string('adresse')->nullable();
-            $table->string('identifiant', 50)->unique(); // Code unique pour l'opérateur
-            $table->boolean('actif')->default(true)->index(); // Statut
+            $table->string('nom')->index();
+            $table->string('telephone')->nullable()->index();
+            $table->string('email')->nullable()->unique();
+            $table->string('pays')->nullable();
+            $table->string('identifiant', 100)->unique()->nullable();
+            $table->boolean('actif')->default(true)->index();
             $table->timestamps();
         });
     }

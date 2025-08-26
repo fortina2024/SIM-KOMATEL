@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\DeviceResource\Pages;
 use App\Filament\Resources\DeviceResource\RelationManagers;
 use App\Models\Device;
@@ -25,38 +26,37 @@ class DeviceResource extends Resource
     {
         return $form
         ->schema([
-            Section::make('Devices fonctionnels')
+            Section::make('Device fonctionnel')
                 ->description('Prise en charge des devices, entrer toutes les informations nécessaires.')
                 ->schema([
                     Grid::make(3)
-            ->schema([
-                Forms\Components\TextInput::make('nom')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('marque')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\TextInput::make('imei')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('serial_number')
-                    ->label('Numéro série')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\TextInput::make('type')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\TextInput::make('sim_id')
-                    ->label('Numéro sim')
-                    ->numeric()
-                    ->default(null),
-                Forms\Components\Toggle::make('active')
-                    ->required(),
-                Forms\Components\DatePicker::make('date_achat'),
-                Forms\Components\DatePicker::make('date_mise_en_service'),
-                ])                   
-            ]),
-        ]);
+                ->schema([
+                    Forms\Components\TextInput::make('nom')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('marque')
+                        ->maxLength(255)
+                        ->default(null),
+                    Forms\Components\TextInput::make('imei')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('numero_serie')
+                        ->label('Numéro série')
+                        ->maxLength(255)
+                        ->default(null),
+                    Forms\Components\Select::make('type_device_id')
+                        ->relationship('type_device', 'description')
+                        ->default(null),
+                    Forms\Components\Select::make('parc_de_sim_id')
+                        ->label('Numéro sim')
+                        ->relationship('parc_de_sim', 'iccid')
+                        ->default(null),
+                    Forms\Components\Toggle::make('active')
+                        ->required(),
+                    Forms\Components\DatePicker::make('date_mise_en_service_device'),
+                    ])                   
+                ]),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -69,19 +69,16 @@ class DeviceResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('imei')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('serial_number')
+                Tables\Columns\TextColumn::make('numero_serie')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('type')
+                Tables\Columns\TextColumn::make('type_device.description')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('sim_id')
+                Tables\Columns\TextColumn::make('parc_de_sim.iccid')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('date_achat')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date_mise_en_service')
+                Tables\Columns\TextColumn::make('date_mise_en_service_device')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -102,6 +99,7 @@ class DeviceResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    FilamentExportBulkAction::make('export'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

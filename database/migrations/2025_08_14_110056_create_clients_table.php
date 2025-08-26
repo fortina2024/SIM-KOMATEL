@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('nom')->index();
-            $table->string('telephone', 20)->nullable()->index();
-            $table->string('email')->nullable()->unique();
-            $table->string('adresse')->nullable();
-            $table->string('identifiant', 50)->unique();
+            $table->string('pays')->nullable();
+            $table->string('identifiant', 100)->unique()->nullable();
             $table->boolean('actif')->default(true)->index();
             $table->timestamps();
         });

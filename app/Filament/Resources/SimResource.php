@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\SimResource\Pages;
 use App\Filament\Resources\SimResource\RelationManagers;
-use App\Models\Sim;
+use App\Models\ParcDeSim;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,7 +18,7 @@ use Filament\Forms\Components\Section;
 
 class SimResource extends Resource
 {
-    protected static ?string $model = Sim::class;
+    protected static ?string $model = ParcDeSim::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
 
@@ -25,8 +26,8 @@ class SimResource extends Resource
     {
         return $form
         ->schema([
-            Section::make('Sims fonctionnelles')
-                ->description('Prise en charge des sims, entrer toutes les informations nécessaires.')
+            Section::make('Sims opérationnelles')
+                ->description('Prise en charge des sims, entrez toutes les informations nécessaires.')
                 ->schema([
                     Grid::make(3)
             ->schema([
@@ -37,7 +38,7 @@ class SimResource extends Resource
                     ->maxLength(255)
                     ->required()
                     ->default(null),
-                Forms\Components\TextInput::make('bundel')
+                Forms\Components\TextInput::make('imsi')
                     ->maxLength(255)
                     ->default(null),
                 Forms\Components\Toggle::make('active')
@@ -49,20 +50,20 @@ class SimResource extends Resource
                     ->preload()
                     ->required(),
                 Forms\Components\Select::make('operateur_id')
-                    ->label('Operateur')
+                    ->label('Opérateur')
                     ->relationship('operateur', 'nom')
                     ->searchable()
                     ->required()
                     ->preload()
                     ->default(null),
-                Forms\Components\Select::make('zone_operation_id')
-                    ->label('Zone d\'operation')
-                    ->relationship('zone_operation', 'disponibilite')
+                Forms\Components\Select::make('bundel_id')
+                    ->label('Bundel')
+                    ->relationship('bundel', 'nom')
                     ->searchable()
                     ->preload()
                     ->default(null),
                 Forms\Components\DatePicker::make('date_activation'),
-                Forms\Components\DatePicker::make('date_expiration'),
+                Forms\Components\DatePicker::make('date_mise_en_service'),
                 ])                   
             ]),
         ]);
@@ -76,23 +77,26 @@ class SimResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('iccid')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bundel')
+                Tables\Columns\TextColumn::make('imsi')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('bundel.nom')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('active')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('profil_sim_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('operateur_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('zone_operation_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date_activation')
+                    ->boolean()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('profil_sim.type')
+                    ->label('ProfiSim')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('operateur.nom')
+                    ->label('Operateur')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('date_mise_en_service')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('date_expiration')
+                Tables\Columns\TextColumn::make('date_activation')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -113,6 +117,7 @@ class SimResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    FilamentExportBulkAction::make('export'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

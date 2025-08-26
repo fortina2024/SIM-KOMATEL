@@ -14,14 +14,13 @@ return new class extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->string('nom')->index()->unique();
-            $table->string('marque')->nullable();//Model
+            $table->string('marque')->nullable();
             $table->string('imei')->unique();
-            $table->string('serial_number')->nullable()->unique();
-            $table->string('type')->nullable();
-            $table->foreignId('sim_id')->nullable()->constrained('sims')->nullOnDelete();
+            $table->string('numero_serie')->nullable()->unique();
             $table->boolean('active')->default(true)->index();
-            $table->date('date_achat')->nullable();
-            $table->date('date_mise_en_service')->nullable();
+            $table->foreignId('type_device_id')->nullable()->constrained('type_devices')->nullOnDelete();
+            $table->foreignId('parc_de_sim_id')->nullable()->unique()->constrained('parc_de_sims')->nullOnDelete();
+            $table->date('date_mise_en_service_device')->nullable();
             $table->timestamps();
         });
     }

@@ -10,6 +10,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Assets\Css;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -32,8 +33,13 @@ class AdminPanelProvider extends PanelProvider
             //->favicon(asset('images/img_kmtl.png'))
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#D2D612',//Color::Amber,
             ])
+            //->viteTheme('resources/css/filament.css')
+            /*->assets([
+                Css::make('custom-styles', 'css/personnaliser/filament-personnalise.css'),
+            ])*/
+            //->topbar(false)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -56,7 +62,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
-                //FilamentShieldPlugin::make(),
+                FilamentShieldPlugin::make(),
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([

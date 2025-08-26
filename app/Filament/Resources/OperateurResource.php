@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\OperateurResource\Pages;
 use App\Filament\Resources\OperateurResource\RelationManagers;
 use App\Models\Operateur;
@@ -35,11 +36,19 @@ class OperateurResource extends Resource
                 Forms\Components\TextInput::make('nom')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('telephone')
+                Forms\Components\TextInput::make('telephone_1')
                     ->tel()
                     ->maxLength(20)
                     ->default(null),
-                Forms\Components\TextInput::make('email')
+                Forms\Components\TextInput::make('email_1')
+                    ->email()
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('telephone_2')
+                    ->tel()
+                    ->maxLength(20)
+                    ->default(null),
+                Forms\Components\TextInput::make('email_2')
                     ->email()
                     ->maxLength(255)
                     ->default(null),
@@ -47,7 +56,6 @@ class OperateurResource extends Resource
                     ->label('Pays')
                     ->required()
                     ->options($countries)
-                    //->default(null)
                     ->preload()
                     ->searchable(),
                 Forms\Components\TextInput::make('identifiant')
@@ -66,9 +74,16 @@ class OperateurResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('nom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('telephone')
+                Tables\Columns\TextColumn::make('telephone_1')
+                    ->icon('heroicon-s-phone')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('email_1')
+                    ->icon('heroicon-s-envelope')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('telephone_2')
+                    ->icon('heroicon-s-phone')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email_2')
                     ->icon('heroicon-s-envelope')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('pays')
@@ -96,6 +111,7 @@ class OperateurResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    FilamentExportBulkAction::make('export'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -117,4 +133,5 @@ class OperateurResource extends Resource
             'edit' => Pages\EditOperateur::route('/{record}/edit'),
         ];
     }
+
 }

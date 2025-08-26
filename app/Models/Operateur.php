@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Operateur extends Model
 {
     protected $fillable=[
-        'nom','telephone','email','pays','identifiant','actif'
+        'nom','telephone_1','email_1','telephone_2','email_2','pays','identifiant','actif'
     ];
 }

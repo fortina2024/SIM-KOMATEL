@@ -12,8 +12,8 @@ class ProfilSim extends Model
         'type'
     ];
 
-    public function sim()
+    public function parc_de_sim()
     {
-        return $this->hasMany(Sim::class, 'profil_sim_id');
+        return $this->hasMany(ParcDeSim::class);
     }
 }
