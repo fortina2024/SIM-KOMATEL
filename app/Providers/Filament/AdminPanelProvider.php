@@ -29,17 +29,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->brandName('KOMATEL Sims system')
-            //->brandLogo(asset('images/img_kmtl.png'))
-            //->favicon(asset('images/img_kmtl.png'))
-            ->login()
+            ->login(\Filament\Pages\Auth\Login::class)
             ->colors([
                 'primary' => '#D2D612',//Color::Amber,
             ])
-            //->viteTheme('resources/css/filament.css')
-            /*->assets([
-                Css::make('custom-styles', 'css/personnaliser/filament-personnalise.css'),
-            ])*/
-            //->topbar(false)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -63,7 +56,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,
